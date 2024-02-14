@@ -1,11 +1,7 @@
 package es.s2o.selenium.stepsdefs.flightSearchs;
 
-import es.s2o.selenium.builders.FlightSearchBuilder;
 import es.s2o.selenium.domain.FlightSearchCriteria;
-import es.s2o.selenium.domain.ReservationDTO;
 import es.s2o.selenium.pages.FlightSearchPage;
-import es.s2o.selenium.pages.ReservationListPage;
-import es.s2o.selenium.pages.ReservationPage;
 import es.s2o.selenium.services.FlightSearchService;
 
 import io.cucumber.java.After;
@@ -17,7 +13,6 @@ import net.serenitybdd.annotations.Steps;
 import net.serenitybdd.core.pages.WebElementFacade;
 import net.thucydides.model.environment.SystemEnvironmentVariables;
 import net.thucydides.model.util.EnvironmentVariables;
-import org.openqa.selenium.By;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,11 +36,6 @@ public class FlightSearchStepdefs {
     @Steps
     private FlightSearchService flightService;
 
-    private ReservationListPage reservationListPage;
-    private ReservationPage reservationPage;
-
-    private List<ReservationDTO> reservations;
-
     private FlightSearchPage flightSearchPage;
 
     @Before
@@ -65,7 +55,6 @@ public class FlightSearchStepdefs {
         EnvironmentVariables variables = SystemEnvironmentVariables.createEnvironmentVariables();
         String baseUrl = variables.getProperty("WEB_SEARCH_ROOT");
         flightSearchPage.openAt(baseUrl);
-        //reservationPage.find(By.id("onetrust-reject-all-handler")).waitUntilVisible().click();
         flightSearchPage.closeCookiesPopup();
     }
 
@@ -80,6 +69,10 @@ public class FlightSearchStepdefs {
         flightSearchPage.selectOneWayTrip();
         flightSearchPage.navigateToCorrectMonth();
         flightSearchPage.selectFirstWeekendDate();
+        //Aquí tengo comentado el método que setea la fecha del vuelo
+        //es la otra forma de hacer el test, pero dejé en uso la forma que se mueve en el calendar
+        //el problema es que el input es readonly y en el método explico lo que hago
+        //flightSearchPage.SetDate(flightSearchCriteria.getFlightDate());
         flightSearchPage.increaseAdultsPassengersIfNeeded(flightSearchCriteria.getPassengers());
         flightSearchPage.sendRequest();
     }

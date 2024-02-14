@@ -4,6 +4,7 @@ import net.serenitybdd.core.annotations.findby.FindBy;
 import net.serenitybdd.core.pages.PageObject;
 import net.serenitybdd.core.pages.WebElementFacade;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,7 +55,10 @@ public class FlightSearchPage extends PageObject {
     }
 
     public void enterDestination(String destination) {
-        inputDestination.type(destination);
+        inputDestination.clear();
+        inputDestination.sendKeys(destination);
+        inputDestination.sendKeys(" ");
+
         popupList.waitUntilVisible().then().findBy("vy-airports-li li.liStation").click();
     }
 
@@ -99,5 +103,23 @@ public class FlightSearchPage extends PageObject {
 
         List<WebElementFacade> flightCards = findAll(By.cssSelector("#flightCardsContainer [data-js-id='flightCard']"));
         return flightCards;
+    }
+
+
+
+
+
+    /*
+    * Aquí quito la propiedad readonly seteo la fecha y vuelvo a dejar readonly en input
+    * este método es otra opción para completar el testing
+    * */
+    public void SetDate(LocalDate date)
+    {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        String outBoundDate = date.format(formatter);
+        JavascriptExecutor js = (JavascriptExecutor) getDriver();
+        js.executeScript("arguments[0].removeAttribute('readonly');", outboundDateInput.getWrappedElement());
+        js.executeScript("arguments[0].value = arguments[1];", outboundDateInput.getWrappedElement(), outBoundDate);
+        js.executeScript("arguments[0].setAttribute('readonly', 'true');", outboundDateInput.getWrappedElement());
     }
 }
